@@ -83,7 +83,7 @@ resource "aws_lb" "aws_alb" {
 	internal = false
 	load_balancer_type = "application"
 	security_groups = [aws_security_group.http_allowed.id]
-	subnets = [aws_subnet.ec2_hosts1b.id, aws_subnet.ec2_hosts1c.id]
+	subnets = [aws_subnet.ecs_hosts1b.id, aws_subnet.ecs_hosts1c.id]
 
-	enable_deletion_protection = true
+	enable_deletion_protection = false //false for the sake of convenience, should be true
 }
