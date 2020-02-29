@@ -4,7 +4,6 @@ resource "aws_internet_gateway" "igw" {
 
 resource "aws_route_table" "aws_rtb_public" {
 	vpc_id = aws_vpc.jr_vpc.id
-
 	route {
 		cidr_block = "0.0.0.0/0"
 		gateway_id = aws_internet_gateway.igw.id
@@ -33,7 +32,7 @@ resource "aws_route_table_association" "table1c" {
 	route_table_id = aws_route_table.aws_rtb_public.id
 }
 
-resource "aws_security_group" "ssh-allowed" {
+resource "aws_security_group" "remote_management" {
 	vpc_id = aws_vpc.jr_vpc.id
 
 	egress {
@@ -59,4 +58,32 @@ resource "aws_security_group" "ssh-allowed" {
 		protocol	= "tcp"
 		cidr_blocks = ["0.0.0.0/0"]
 	}
+}
+
+resource "aws_security_group" "http_allowed" {
+	vpc_id = aws_vpc.jr_vpc.id
+
+	egress {
+		from_port	= 80
+		to_port	= 80
+		protocol	= "tcp"
+		cidr_blocks = ["0.0.0.0/0"]
+	}
+
+	// This is for HTTP through ALB
+	ingress {
+		from_port	= 80
+		to_port	= 80
+		protocol	= "tcp"
+		cidr_blocks = ["0.0.0.0/0"]
+	}
+}
+
+resource "aws_lb" "aws_alb" {
+	internal = false
+	load_balancer_type = "application"
+	security_groups = [aws_security_group.http_allowed.id]
+	subnets = [aws_subnet.ec2_hosts1b.id, aws_subnet.ec2_hosts1c.id]
+
+	enable_deletion_protection = true
 }
