@@ -13,8 +13,8 @@ resource "aws_lb_listener" "listener_http" {
   protocol          = "HTTP"
 
   default_action {
-    //target_group_arn = //add target group here
-    type = "forward"
+    target_group_arn = aws_lb_target_group.jr_hosts.arn
+    type             = "forward"
   }
 }
 
@@ -24,8 +24,8 @@ resource "aws_lb_listener" "listener_https" {
   protocol          = "HTTP"
 
   default_action {
-    //target_group_arn = //add target group here
-    type = "forward"
+    target_group_arn = aws_lb_target_group.jr_hosts.arn
+    type             = "forward"
   }
 }
 
@@ -36,6 +36,6 @@ resource "aws_lb_target_group" "jr_hosts" {
 }
 
 resource "aws_autoscaling_attachment" "asg_attach" {
-  autoscaling_group_name = aws_autoscaling_group.ec2_autoscale.id
+  autoscaling_group_name = aws_autoscaling_group.ecs_autoscale.id
   alb_target_group_arn   = aws_lb_target_group.jr_hosts.arn
 }
