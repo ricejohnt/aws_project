@@ -10,6 +10,22 @@ resource "aws_route_table" "aws_rtb_public" {
   }
 }
 
+resource "aws_route_table" "aws_rtb_private_to_1b" {
+  vpc_id = aws_vpc.jr_vpc.id
+  route {
+    cidr_block     = "0.0.0.0/0"
+    nat_gateway_id = aws_nat_gateway.nat_gateway1b.id
+  }
+}
+
+resource "aws_route_table" "aws_rtb_private_to_1c" {
+  vpc_id = aws_vpc.jr_vpc.id
+  route {
+    cidr_block     = "0.0.0.0/0"
+    nat_gateway_id = aws_nat_gateway.nat_gateway1c.id
+  }
+}
+
 resource "aws_nat_gateway" "nat_gateway1b" {
   allocation_id = aws_eip.eip_zone_1b.id
   subnet_id     = aws_subnet.sub_nat_gateway1b.id
@@ -30,6 +46,16 @@ resource "aws_route_table_association" "table1b" {
 resource "aws_route_table_association" "table1c" {
   subnet_id      = aws_subnet.sub_nat_gateway1c.id
   route_table_id = aws_route_table.aws_rtb_public.id
+}
+
+resource "aws_route_table_association" "private1b" {
+  subnet_id      = aws_subnet.ecs_hosts1b.id
+  route_table_id = aws_route_table.aws_rtb_private_to_1b.id
+}
+
+resource "aws_route_table_association" "private1c" {
+  subnet_id      = aws_subnet.ecs_hosts1c.id
+  route_table_id = aws_route_table.aws_rtb_private_to_1c.id
 }
 
 resource "aws_security_group" "remote_management" {
