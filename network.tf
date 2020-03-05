@@ -84,6 +84,21 @@ resource "aws_security_group" "remote_management" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
+
+  ingress {
+    from_port   = 500
+    to_port     = 500
+    protocol    = "udp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 4500
+    to_port     = 4500
+    protocol    = "udp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
 }
 
 resource "aws_security_group" "http_allowed" {
@@ -103,25 +118,4 @@ resource "aws_security_group" "http_allowed" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
-}
-
-resource "aws_vpn_gateway" "vpn_gateway" {
-  vpc_id = aws_vpc.jr_vpc.id
-}
-
-resource "aws_customer_gateway" "customer_gateway" {
-  bgp_asn    = 65000
-  ip_address = "192.168.1.1"
-  type       = "ipsec.1"
-}
-
-resource "aws_vpn_connection" "vpn" {
-  vpn_gateway_id      = aws_vpn_gateway.vpn_gateway.id
-  customer_gateway_id = aws_customer_gateway.customer_gateway.id
-  type                = "ipsec.1"
-}
-
-resource "aws_vpn_connection_route" "home" {
-  destination_cidr_block = "192.168.1.0/24"
-  vpn_connection_id      = aws_vpn_connection.vpn.id
 }
