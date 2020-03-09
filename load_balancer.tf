@@ -35,7 +35,7 @@ resource "aws_lb_target_group" "jr_hosts" {
   vpc_id   = aws_vpc.jr_vpc.id
 }
 
-resource "aws_autoscaling_attachment" "asg_attach" {
-  autoscaling_group_name = aws_autoscaling_group.ecs_autoscale.id
-  alb_target_group_arn   = aws_lb_target_group.jr_hosts.arn
-}
+# resource "aws_autoscaling_attachment" "asg_attach" {
+#   autoscaling_group_name = aws_autoscaling_group.ecs_autoscale.id
+#   alb_target_group_arn   = aws_lb_target_group.jr_hosts.arn
+# }

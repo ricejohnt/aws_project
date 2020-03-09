@@ -111,6 +111,13 @@ resource "aws_security_group" "http_allowed" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  egress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   // This is for HTTP through ALB
   ingress {
     from_port   = 80
@@ -118,4 +125,12 @@ resource "aws_security_group" "http_allowed" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
 }
