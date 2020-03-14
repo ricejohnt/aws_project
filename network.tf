@@ -58,7 +58,7 @@ resource "aws_route_table_association" "private1c" {
   route_table_id = aws_route_table.aws_rtb_private_to_1c.id
 }
 
-resource "aws_security_group" "remote_management" {
+resource "aws_security_group" "http_allowed" {
   vpc_id = aws_vpc.jr_vpc.id
 
   egress {
@@ -68,67 +68,10 @@ resource "aws_security_group" "remote_management" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  ingress {
-    from_port = 22
-    to_port   = 22
-    protocol  = "tcp"
-
-    // consider putting home address here
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  // This is for NGINX/HTTP
-  ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    from_port   = 500
-    to_port     = 500
-    protocol    = "udp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    from_port   = 4500
-    to_port     = 4500
-    protocol    = "udp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-}
-
-resource "aws_security_group" "http_allowed" {
-  vpc_id = aws_vpc.jr_vpc.id
-
-  egress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
   // This is for HTTP through ALB
   ingress {
     from_port   = 80
     to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    from_port   = 443
-    to_port     = 443
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }

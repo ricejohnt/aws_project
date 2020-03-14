@@ -18,24 +18,15 @@ resource "aws_lb_listener" "listener_http" {
   }
 }
 
-resource "aws_lb_listener" "listener_https" {
-  load_balancer_arn = aws_lb.aws_alb.arn
-  port              = 443
-  protocol          = "HTTP"
-
-  default_action {
-    target_group_arn = aws_lb_target_group.jr_hosts.arn
-    type             = "forward"
-  }
-}
-
 resource "aws_lb_target_group" "jr_hosts" {
   port     = 80
   protocol = "HTTP"
   vpc_id   = aws_vpc.jr_vpc.id
-}
+  target_type = "ip"
 
-# resource "aws_autoscaling_attachment" "asg_attach" {
-#   autoscaling_group_name = aws_autoscaling_group.ecs_autoscale.id
-#   alb_target_group_arn   = aws_lb_target_group.jr_hosts.arn
-# }
+  health_check {
+    path = "/"
+    port = 80
+  }
+
+}
